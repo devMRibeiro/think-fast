@@ -33,39 +33,30 @@ public class Question {
 	public Long getQuestionId() {
 		return questionId;
 	}
-
 	public void setQuestionId(Long questionId) {
 		this.questionId = questionId;
 	}
-
 	public String getText() {
 		return text;
 	}
-
 	public void setText(String text) {
 		this.text = text;
 	}
-
 	public List<String> getOption() {
 		return option;
 	}
-
 	public void setOption(List<String> option) {
 		this.option = option;
 	}
-
 	public int getCorrectOptionIndex() {
 		return correctOptionIndex;
 	}
-
 	public void setCorrectOptionIndex(int correctOptionIndex) {
 		this.correctOptionIndex = correctOptionIndex;
 	}
-
 	public Quiz getQuiz() {
 		return quiz;
 	}
-
 	public void setQuiz(Quiz quiz) {
 		this.quiz = quiz;
 	}

@@ -19,7 +19,7 @@ import com.github.devmribeiro.thinkfast.util.ApiResponse;
 @RequestMapping(path = "/quizzes")
 public class QuizController {
 
-	private QuizService quizService;
+	private final QuizService quizService;
 	
 	public QuizController(QuizService quizService) {
 		this.quizService = quizService;

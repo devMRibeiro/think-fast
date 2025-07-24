@@ -20,7 +20,7 @@ public class QuizService {
 	
 	public QuizDTO listById(Long quizId) {
 
-		Quiz quiz = quizRepository.findQuizById(quizId);
+		Quiz quiz = quizRepository.findQuizByQuizId(quizId);
 
 		if (quiz == null)
 	        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Quiz not found");
@@ -43,7 +43,7 @@ public class QuizService {
 			if (dto.option() == null || dto.option().size() != 4)
                 throw new IllegalArgumentException("Each question must have 4 options");
 
-			if (dto.correctOptionIndex() != 1)
+			if (dto.correctOptionIndex() < 0 || dto.correctOptionIndex() > 3)
                 throw new IllegalArgumentException("Each question must have one correct option");
 		}
 

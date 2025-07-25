@@ -13,7 +13,7 @@ public class QuizMapper {
 	    Quiz quiz = new Quiz();
 	    quiz.setTitle(dto.title());
 
-	    List<Question> questions = questionsToEntities(dto.questionDTOList());
+	    List<Question> questions = questionsToEntities(dto.questionDTOList(), quiz);
 
 	    for (Question q : questions)
 	    	q.setQuiz(quiz);
@@ -22,19 +22,19 @@ public class QuizMapper {
 
 	    return quiz;
 	}
-	
-	private static List<Question> questionsToEntities(List<QuestionDTO> questionDTOList) {
+
+	public static List<Question> questionsToEntities(List<QuestionDTO> questionDTOList, Quiz quiz) {
 		if (questionDTOList == null)
 			return new ArrayList<Question>();
-	
+
 		List<Question> questionList = new ArrayList<Question>(questionDTOList.size());
-	
+
 		for (QuestionDTO dto : questionDTOList)
-			questionList.add(QuestionMapper.toEntity(dto));
-	
+			questionList.add(QuestionMapper.toEntity(dto, quiz));
+
 		return questionList;
 	}
-	
+
 	public static QuizDTO toDTO(Quiz quiz) {
 		if (quiz != null) {
 			List<QuestionDTO> questionDTOList = new ArrayList<QuestionDTO>(quiz.getQuestions().size());

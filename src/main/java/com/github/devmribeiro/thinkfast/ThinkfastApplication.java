@@ -9,5 +9,4 @@ public class ThinkfastApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ThinkfastApplication.class, args);
 	}
-
 }

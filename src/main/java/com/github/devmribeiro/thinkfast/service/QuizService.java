@@ -17,7 +17,7 @@ public class QuizService {
 	public QuizService(QuizRepository quizRepository) {
 		this.quizRepository = quizRepository;
 	}
-	
+
 	public QuizDTO listById(Long quizId) {
 
 		Quiz quiz = quizRepository.findQuizByQuizId(quizId);
@@ -30,23 +30,42 @@ public class QuizService {
 
 	public Long save(QuizDTO quizDTO) {
 
-		if (quizDTO.title() == null || quizDTO.title().isBlank())
-			throw new IllegalArgumentException("Quiz must contain one Title");
-
-		if (quizDTO.questionDTOList() == null || quizDTO.questionDTOList().size() > 10)
-            throw new IllegalArgumentException("Quiz must contain at least one question and a maximum of 10");
-
-		for (QuestionDTO dto : quizDTO.questionDTOList()) {
-			if (dto.text() == null || dto.text().isBlank())
-                throw new IllegalArgumentException("Each question must contain a statement");
-
-			if (dto.option() == null || dto.option().size() != 4)
-                throw new IllegalArgumentException("Each question must have 4 options");
-
-			if (dto.correctOptionIndex() < 0 || dto.correctOptionIndex() > 3)
-                throw new IllegalArgumentException("Each question must have one correct option");
-		}
+		validateQuizDTO(quizDTO);
 
 		return quizRepository.save(QuizMapper.toEntity(quizDTO)).getQuizId();
+	}
+
+	public Long edit(Long quizId, QuizDTO quizDTO) {
+
+		Quiz quiz = quizRepository.findQuizByQuizId(quizId);
+
+		if (quiz == null)
+	        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Quiz not found");
+
+		validateQuizDTO(quizDTO);
+
+		quiz.setTitle(quizDTO.title());
+		quiz.setQuestions(QuizMapper.questionsToEntities(quizDTO.questionDTOList(), quiz));
+
+		return quizRepository.save(quiz).getQuizId();
+	}
+	
+	private void validateQuizDTO(QuizDTO quizDTO) {
+		if (quizDTO.title() == null || quizDTO.title().isBlank())
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quiz must contain one Title");
+		
+		if (quizDTO.questionDTOList() == null || quizDTO.questionDTOList().size() > 10)
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quiz must contain at least one question and a maximum of 10");
+		
+		for (QuestionDTO dto : quizDTO.questionDTOList()) {
+			if (dto.text() == null || dto.text().isBlank())
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Each question must contain a statement");
+			
+			if (dto.option() == null || dto.option().size() != 4)
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Each question must have 4 options");
+			
+			if (dto.correctOptionIndex() < 0 || dto.correctOptionIndex() > 3)
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Each question must have one correct option");
+		}
 	}
 }

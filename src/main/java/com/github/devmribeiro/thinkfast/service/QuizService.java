@@ -1,11 +1,11 @@
 package com.github.devmribeiro.thinkfast.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.github.devmribeiro.thinkfast.dto.question.QuestionDTO;
 import com.github.devmribeiro.thinkfast.dto.quiz.QuizDTO;
+import com.github.devmribeiro.thinkfast.exception.BadRequestException;
+import com.github.devmribeiro.thinkfast.exception.ResourceNotFoundException;
 import com.github.devmribeiro.thinkfast.mapper.QuizMapper;
 import com.github.devmribeiro.thinkfast.model.Quiz;
 import com.github.devmribeiro.thinkfast.repository.QuizRepository;
@@ -23,7 +23,7 @@ public class QuizService {
 		Quiz quiz = quizRepository.findQuizByQuizId(quizId);
 
 		if (quiz == null)
-	        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Quiz not found");
+	        throw new ResourceNotFoundException("Quiz not found");
 
 		return QuizMapper.toDTO(quiz);
 	}
@@ -40,7 +40,7 @@ public class QuizService {
 		Quiz quiz = quizRepository.findQuizByQuizId(quizId);
 
 		if (quiz == null)
-	        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Quiz not found");
+			throw new ResourceNotFoundException("Quiz not found");
 
 		validateQuizDTO(quizDTO);
 
@@ -52,20 +52,20 @@ public class QuizService {
 	
 	private void validateQuizDTO(QuizDTO quizDTO) {
 		if (quizDTO.title() == null || quizDTO.title().isBlank())
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quiz must contain one Title");
+			throw new BadRequestException("Quiz must contain one Title");
 		
 		if (quizDTO.questionDTOList() == null || quizDTO.questionDTOList().size() > 10)
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quiz must contain at least one question and a maximum of 10");
+			throw new BadRequestException("Quiz must contain at least one question and a maximum of 10");
 		
 		for (QuestionDTO dto : quizDTO.questionDTOList()) {
 			if (dto.text() == null || dto.text().isBlank())
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Each question must contain a statement");
+				throw new BadRequestException("Each question must contain a statement");
 			
 			if (dto.option() == null || dto.option().size() != 4)
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Each question must have 4 options");
+				throw new BadRequestException("Each question must have 4 options");
 			
 			if (dto.correctOptionIndex() < 0 || dto.correctOptionIndex() > 3)
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Each question must have one correct option");
+				throw new BadRequestException("Each question must have one correct option");
 		}
 	}
 }

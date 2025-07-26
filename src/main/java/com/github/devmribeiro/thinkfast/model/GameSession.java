@@ -14,7 +14,7 @@ import jakarta.persistence.OneToMany;
 public class GameSession {
 
 	@Id
-	private String pin;
+	private Integer pin;
 	
 	private LocalDateTime startTime;
 	
@@ -24,10 +24,10 @@ public class GameSession {
 	@OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Player> players = new ArrayList<Player>();
 
-	public String getPin() {
+	public Integer getPin() {
 		return pin;
 	}
-	public void setPin(String pin) {
+	public void setPin(Integer pin) {
 		this.pin = pin;
 	}
 	public LocalDateTime getStartTime() {

@@ -18,6 +18,10 @@ public class QuizService {
 		this.quizRepository = quizRepository;
 	}
 
+	public Quiz findById(Long quizId) {
+		return quizRepository.findQuizByQuizId(quizId);
+	}
+
 	public QuizDTO listById(Long quizId) {
 
 		Quiz quiz = quizRepository.findQuizByQuizId(quizId);
